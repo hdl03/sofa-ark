@@ -42,6 +42,8 @@ public class SofaArkBootstrap {
 
     public static void launch(String[] args) {
         try {
+            System.out.println(" hdl custom  SofaArkBootstrap ArkConfigs  " + "logging.path = "
+                               + System.getProperty("logging.path"));
             if (!isSofaArkStarted()) {
                 entryMethod = new EntryMethod(Thread.currentThread());
                 IsolatedThreadGroup threadGroup = new IsolatedThreadGroup(

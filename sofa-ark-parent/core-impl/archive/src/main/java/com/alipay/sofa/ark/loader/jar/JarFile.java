@@ -371,9 +371,11 @@ public class JarFile extends java.util.jar.JarFile {
      * {@link URLStreamHandler} will be located to deal with jar URLs.
      */
     public static void registerUrlProtocolHandler() {
+        // 协议已|  分隔 com.alipay.sofa.ark.loader  自己处理文件协议
         String handlers = System.getProperty(PROTOCOL_HANDLER, "");
         System.setProperty(PROTOCOL_HANDLER, ("".equals(handlers) ? HANDLERS_PACKAGE
             : handlers + "|" + HANDLERS_PACKAGE));
+
         resetCachedUrlHandlers();
     }
 
@@ -384,6 +386,7 @@ public class JarFile extends java.util.jar.JarFile {
      */
     private static void resetCachedUrlHandlers() {
         try {
+            // 清空 文件协议处理器，防止有缓存
             URL.setURLStreamHandlerFactory(null);
         } catch (Error ex) {
             // Ignore

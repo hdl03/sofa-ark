@@ -80,12 +80,17 @@ public class ArkContainer {
     private static final int    MINIMUM_ARGS_SIZE = 1;
 
     public static Object main(String[] args) throws ArkRuntimeException {
+
+        System.out.println(" hdl custom  ArkContainer main  " + args);
+
         if (args.length < MINIMUM_ARGS_SIZE) {
             throw new ArkRuntimeException("Please provide suitable arguments to continue !");
         }
 
         try {
             LaunchCommand launchCommand = LaunchCommand.parse(args);
+            System.out.println(" hdl custom  ArkContainer launchCommand  "
+                               + launchCommand.toString());
             if (launchCommand.isExecutedByCommandLine()) {
                 ExecutableArkBizJar executableArchive;
                 File rootFile = new File(URLDecoder.decode(launchCommand.getExecutableArkBizJar()
@@ -96,11 +101,15 @@ public class ArkContainer {
                     executableArchive = new ExecutableArkBizJar(new JarFileArchive(rootFile,
                         launchCommand.getExecutableArkBizJar()));
                 }
+                System.out.println(" hdl custom  ArkContainer executableArchive  "
+                                   + executableArchive);
                 return new ArkContainer(executableArchive, launchCommand).start();
             } else {
                 ClassPathArchive classPathArchive = new ClassPathArchive(
                     launchCommand.getEntryClassName(), launchCommand.getEntryMethodName(),
                     launchCommand.getClasspath());
+                System.out.println(" hdl custom  ArkContainer classPathArchive  "
+                                   + classPathArchive);
                 return new ArkContainer(classPathArchive, launchCommand).start();
             }
         } catch (IOException e) {
@@ -128,6 +137,8 @@ public class ArkContainer {
      * @since 0.1.0
      */
     public Object start() throws ArkRuntimeException {
+        System.out.println(" hdl custom  AbstractLauncher 3-1 ArkConfigs  " + "logging.path = "
+                           + System.getProperty("logging.path"));
         AssertUtils.assertNotNull(arkServiceContainer, "arkServiceContainer is null !");
         if (started.compareAndSet(false, true)) {
             Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
@@ -136,9 +147,14 @@ public class ArkContainer {
                     stop();
                 }
             }));
+            System.out.println(" hdl custom  ArkContainer start  " + start);
+            System.out.println(" hdl custom  AbstractLauncher 3 ArkConfigs  " + "logging.path = "
+                               + System.getProperty("logging.path"));
             prepareArkConfig();
             reInitializeArkLogger();
+            System.out.println(" hdl custom  ArkContainer start before ");
             arkServiceContainer.start();
+            System.out.println(" hdl custom  ArkContainer start after ");
             Pipeline pipeline = arkServiceContainer.getService(Pipeline.class);
             pipeline.process(pipelineContext);
 
@@ -150,10 +166,13 @@ public class ArkContainer {
 
     /**
      * Prepare to read ark conf
+     *
      * @throws ArkRuntimeException
      */
     public void prepareArkConfig() throws ArkRuntimeException {
         try {
+            System.out.println(" hdl custom  AbstractLauncher 4 ArkConfigs  " + "logging.path = "
+                               + System.getProperty("logging.path"));
             // Forbid to Monitoring and Management Using JMX, because it leads to conflict when setup multi spring boot app.
             ArkConfigs.setSystemProperty(Constants.SPRING_BOOT_ENDPOINTS_JMX_ENABLED,
                 String.valueOf(false));
@@ -163,9 +182,11 @@ public class ArkContainer {
             // compatible sofa-hessian4, refer to https://github.com/sofastack/sofa-hessian/issues/38
             ArkConfigs.setSystemProperty(Constants.RESOLVE_PARENT_CONTEXT_SERIALIZER_FACTORY,
                 "false");
-
+            System.out.println(" hdl custom  ArkContainer ArkConfigs  " + ArkConfigs.keySet() + ","
+                               + "logging.path = " + ArkConfigs.getStringValue("logging.path"));
             // read ark conf file
             List<URL> urls = getProfileConfFiles(pipelineContext.getLaunchCommand().getProfiles());
+            System.out.println(" hdl custom  ArkContainer read ark conf file urls  " + urls);
             ArkConfigs.init(urls);
         } catch (Throwable throwable) {
             throw new ArkRuntimeException(throwable);
@@ -174,6 +195,7 @@ public class ArkContainer {
 
     public List<URL> getProfileConfFiles(String... profiles) {
         List<URL> urls = new ArrayList<>();
+        System.out.println(" hdl custom  ArkContainer getProfileConfFiles  " + profiles);
         for (String profile : profiles) {
             URL url;
             if (StringUtils.isEmpty(profile)) {
@@ -199,6 +221,7 @@ public class ArkContainer {
     public void reInitializeArkLogger() throws ArkRuntimeException {
         for (Map.Entry<SpaceId, SpaceInfo> entry : MultiAppLoggerSpaceManager.getSpacesMap()
             .entrySet()) {
+            System.out.println(" hdl custom  ArkContainer reInitializeArkLogger  " + entry);
             SpaceId spaceId = entry.getKey();
             SpaceInfo spaceInfo = entry.getValue();
             if (!ArkLoggerFactory.SOFA_ARK_LOGGER_SPACE.equals(spaceId.getSpaceName())) {
@@ -208,6 +231,8 @@ public class ArkContainer {
                 .getAbstractLoggerSpaceFactory();
             Map<String, String> arkLogConfig = new HashMap<>();
             // set base logging.path
+            System.out.println(" hdl custom  ArkContainer logging.path  "
+                               + ArkConfigs.getStringValue(LOG_PATH, LOGGING_PATH_DEFAULT));
             arkLogConfig.put(LOG_PATH, ArkConfigs.getStringValue(LOG_PATH, LOGGING_PATH_DEFAULT));
             // set log file encoding
             arkLogConfig.put(LOG_ENCODING_PROP_KEY,
@@ -245,6 +270,7 @@ public class ArkContainer {
 
     /**
      * Whether Ark Container is running or not
+     *
      * @return
      */
     public boolean isRunning() {

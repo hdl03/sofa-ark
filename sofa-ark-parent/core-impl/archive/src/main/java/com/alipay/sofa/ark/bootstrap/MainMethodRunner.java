@@ -45,6 +45,9 @@ public class MainMethodRunner {
         Class<?> mainClass = Thread.currentThread().getContextClassLoader()
             .loadClass(this.mainClassName);
         Method mainMethod = mainClass.getDeclaredMethod("main", String[].class);
+        System.out.println(" hdl custom  run " + mainMethod);
+        System.out.println(" hdl custom  AbstractLauncher 2-3-1 ArkConfigs  " + "logging.path = "
+                           + System.getProperty("logging.path"));
         return mainMethod.invoke(null, new Object[] { this.args });
     }
 

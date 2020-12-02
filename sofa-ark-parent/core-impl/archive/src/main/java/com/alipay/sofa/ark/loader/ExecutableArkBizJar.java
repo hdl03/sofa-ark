@@ -72,6 +72,7 @@ public class ExecutableArkBizJar implements ExecutableArchive {
     public List<Archive> getNestedArchives(EntryFilter filter) throws IOException {
         List<Archive> nestedArchives = new ArrayList<>();
         for (Entry entry : this) {
+            System.out.println("  hdl custom  ArkLauncher getNestedArchives " + entry.getName());
             if (filter.matches(entry)) {
                 nestedArchives.add(getNestedArchive(entry));
             }
@@ -90,7 +91,9 @@ public class ExecutableArkBizJar implements ExecutableArchive {
 
     @Override
     public Iterator<Entry> iterator() {
-        return this.archive.iterator();
+        Iterator<Entry> iterator = this.archive.iterator();
+        System.out.println(" hdl custom  iterator " + iterator);
+        return iterator;
     }
 
     @Override
@@ -103,6 +106,8 @@ public class ExecutableArkBizJar implements ExecutableArchive {
                        && entry.getName().startsWith(SOFA_ARK_CONTAINER);
             }
         });
+        System.out.println(" hdl custom  getContainerArchive " + archives + "size "
+                           + archives.size());
 
         if (archives.isEmpty()) {
             throw new RuntimeException("No ark container archive found!");
@@ -113,6 +118,7 @@ public class ExecutableArkBizJar implements ExecutableArchive {
 
     /**
      * Returns the ark-biz module archives that will run upon ark container
+     *
      * @return biz-app archives
      * @throws Exception
      */
@@ -136,6 +142,7 @@ public class ExecutableArkBizJar implements ExecutableArchive {
 
     /**
      * Returns the ark plugin archives that will be applied to class isolation strategy of ark container
+     *
      * @return ark plugin archives
      * @throws Exception
      */

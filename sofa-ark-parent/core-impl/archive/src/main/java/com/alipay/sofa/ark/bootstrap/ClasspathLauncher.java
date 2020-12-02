@@ -92,11 +92,11 @@ public class ClasspathLauncher extends ArkLauncher {
         public ContainerArchive getContainerArchive() throws Exception {
 
             ContainerArchive archive = getJarContainerArchive();
-
+            System.out.println("hdl custom  getContainerArchive 1" + archive);
             if (archive == null) {
                 archive = createDirectoryContainerArchive();
             }
-
+            System.out.println("hdl custom  getContainerArchive 2 " + archive);
             if (archive == null) {
                 throw new ArkRuntimeException("No Ark Container Jar File Found.");
             }

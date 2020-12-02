@@ -38,14 +38,23 @@ public abstract class AbstractLauncher {
      * @throws Exception if the ark container fails to launch.
      */
     public Object launch(String[] args) throws Exception {
+        // 注册URL 协议的处理器
         JarFile.registerUrlProtocolHandler();
+        // 创建类加载器
+        System.out.println(" hdl custom  AbstractLauncher  1 ArkConfigs  " + "logging.path = "
+                           + System.getProperty("logging.path"));
         ClassLoader classLoader = createContainerClassLoader(getContainerArchive());
+        System.out.println("hdl custom  launch " + classLoader);
+        System.out.println(" hdl custom  AbstractLauncher 2 ArkConfigs  " + "logging.path = "
+                           + System.getProperty("logging.path"));
         List<String> attachArgs = new ArrayList<>();
         attachArgs
             .add(String.format("%s%s=%s", CommandArgument.ARK_CONTAINER_ARGUMENTS_MARK,
                 CommandArgument.FAT_JAR_ARGUMENT_KEY, getExecutableArchive().getUrl()
                     .toExternalForm()));
+        System.out.println("hdl custom  launch  attachArgs " + attachArgs);
         attachArgs.addAll(Arrays.asList(args));
+        // 执行启动类的 main com.alipay.sofa.ark.container.ArkContainer
         return launch(attachArgs.toArray(new String[attachArgs.size()]), getMainClass(),
             classLoader);
     }
@@ -79,6 +88,7 @@ public abstract class AbstractLauncher {
      */
     public Object launch(String classpath, Class testClass) throws Exception {
         JarFile.registerUrlProtocolHandler();
+        // 加载 类加载器
         ClassLoader classLoader = createContainerClassLoader(getContainerArchive());
         List<String> attachArgs = new ArrayList<>();
         attachArgs.add(String.format("%s%s=%s", CommandArgument.ARK_CONTAINER_ARGUMENTS_MARK,
@@ -91,13 +101,23 @@ public abstract class AbstractLauncher {
 
     protected Object launch(String[] args, String mainClass, ClassLoader classLoader)
                                                                                      throws Exception {
+        System.out.println(" hdl custom  AbstractLauncher 2-1 ArkConfigs  " + "logging.path = "
+                           + System.getProperty("logging.path"));
         ClassLoader old = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader(classLoader);
+            System.out.println(" hdl custom  AbstractLauncher 2-2 ArkConfigs  " + "logging.path = "
+                               + System.getProperty("logging.path"));
             return createMainMethodRunner(mainClass, args).run();
         } finally {
+            System.out.println(" hdl custom  AbstractLauncher 2-3 ArkConfigs  " + "logging.path = "
+                               + System.getProperty("logging.path"));
             Thread.currentThread().setContextClassLoader(old);
+            System.out.println(" hdl custom  AbstractLauncher 2-4 ArkConfigs  " + "logging.path = "
+                               + System.getProperty("logging.path"));
+
         }
+
     }
 
     protected MainMethodRunner createMainMethodRunner(String mainClass, String[] args) {
@@ -128,7 +148,9 @@ public abstract class AbstractLauncher {
      */
     protected ClassLoader createContainerClassLoader(ContainerArchive containerArchive)
                                                                                        throws Exception {
+        // 加载conf 路径
         List<URL> classpath = getExecutableArchive().getConfClasspath();
+        System.out.println(" hdl custom  createContainerClassLoader " + classpath);
         classpath.addAll(Arrays.asList(containerArchive.getUrls()));
         return createContainerClassLoader(classpath.toArray(new URL[] {}), null);
     }

@@ -36,6 +36,7 @@ public abstract class BaseExecutableArchiveLauncher extends AbstractLauncher {
 
     private final ExecutableArchive executableArchive;
 
+    // 初始化加载
     public BaseExecutableArchiveLauncher() {
         try {
             this.executableArchive = createArchive();
@@ -55,14 +56,17 @@ public abstract class BaseExecutableArchiveLauncher extends AbstractLauncher {
 
     /**
      * Returns the executable file archive
+     *
      * @return executable file archive
      * @throws Exception
      */
     protected ExecutableArchive createArchive() throws Exception {
+        // 获取当前类的路径
         ProtectionDomain protectionDomain = getClass().getProtectionDomain();
         CodeSource codeSource = protectionDomain.getCodeSource();
         URI location = (codeSource == null ? null : codeSource.getLocation().toURI());
         String path = (location == null ? null : location.getSchemeSpecificPart());
+        System.out.println(" hdl custom  createArchive " + path);
         if (path == null) {
             throw new IllegalStateException("Unable to determine code source archive");
         }
@@ -70,6 +74,7 @@ public abstract class BaseExecutableArchiveLauncher extends AbstractLauncher {
         if (!root.exists()) {
             throw new IllegalStateException("Unable to determine code source archive from " + root);
         }
+
         return root.isDirectory() ? new ExecutableArkBizJar(new ExplodedArchive(root))
             : new ExecutableArkBizJar(new JarFileArchive(root), root.toURI().toURL());
     }

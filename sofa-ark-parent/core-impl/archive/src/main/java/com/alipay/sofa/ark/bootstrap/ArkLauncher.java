@@ -31,7 +31,13 @@ public class ArkLauncher extends BaseExecutableArchiveLauncher {
 
     public final String SOFA_ARK_MAIN = "com.alipay.sofa.ark.container.ArkContainer";
 
+    /**
+     * 启动类
+     * @param args
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception {
+        System.out.println(" hdl custom  ArkLauncher main " + args);
         new ArkLauncher().launch(args);
     }
 

@@ -16,6 +16,7 @@
  */
 package com.alipay.sofa.ark.springboot.listener;
 
+import com.alipay.sofa.ark.api.ArkConfigs;
 import com.alipay.sofa.ark.support.startup.SofaArkBootstrap;
 import org.springframework.boot.SpringBootVersion;
 import org.springframework.boot.context.event.SpringApplicationEvent;
@@ -36,6 +37,8 @@ public class ArkApplicationStartListener implements ApplicationListener<SpringAp
     @Override
     public void onApplicationEvent(SpringApplicationEvent event) {
         try {
+            System.out.println(" hdl custom  onApplicationEvent ArkConfigs  " + "logging.path = "
+                               + ArkConfigs.getStringValue("logging.path"));
             if (isSpringBoot2()
                 && APPLICATION_STARTING_EVENT.equals(event.getClass().getCanonicalName())) {
                 startUpArk(event);

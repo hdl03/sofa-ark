@@ -17,6 +17,7 @@
 package com.alipay.sofa.ark.api;
 
 import com.alipay.sofa.ark.exception.ArkRuntimeException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -27,6 +28,9 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+
+import static com.alipay.sofa.common.log.Constants.LOGGING_PATH_DEFAULT;
+import static com.alipay.sofa.common.log.Constants.LOG_PATH;
 
 /**
  * @author qilong.zql
@@ -64,6 +68,8 @@ public class ArkConfigs {
         Properties properties = new Properties();
         properties.load(inputStream);
         for (Object key : properties.keySet()) {
+            System.out.println(" hdl custom  ArkContainer loadConfigFile urls  " + key + " = "
+                               + properties.get(key));
             CFG.put((String) key, properties.get(key));
         }
     }
@@ -75,6 +81,8 @@ public class ArkConfigs {
      * @param value
      */
     public static void setSystemProperty(String key, String value) {
+        System.out.println(" hdl custom  ArkContainer getStringValue setSystemProperty  " + key
+                           + "  =  " + value);
         System.setProperty(key, value);
     }
 
@@ -94,17 +102,23 @@ public class ArkConfigs {
      * @return the string value
      */
     public static String getStringValue(String primaryKey) {
+        System.out.println(" hdl custom  ArkContainer getStringValue  " + keySet());
         String val = getSystemProperty(primaryKey);
+        System.out.println(" hdl custom  ArkContainer getStringValue value  " + primaryKey
+                           + "  =  " + val);
         if (val == null) {
             val = (String) CFG.get(primaryKey);
         }
+
+        System.out.println(" hdl custom  ArkContainer getStringValue value  " + primaryKey
+                           + "  =  " + val);
         return val;
     }
 
     /**
      * Get string value.
      *
-     * @param primaryKey the primary key
+     * @param primaryKey   the primary key
      * @param defaultValue
      * @return the string value
      */
@@ -116,7 +130,7 @@ public class ArkConfigs {
     /**
      * Get int value.
      *
-     * @param primaryKey the primary key
+     * @param primaryKey   the primary key
      * @param defaultValue
      * @return the int value
      */
@@ -138,10 +152,13 @@ public class ArkConfigs {
 
     /**
      * put string config
+     *
      * @param key
      * @param value
      */
     public static void putStringValue(String key, String value) {
+        System.out.println(" hdl custom  ArkContainer getStringValue putStringValue  " + key
+                           + "  =  " + value);
         CFG.put(key, value);
     }
 }

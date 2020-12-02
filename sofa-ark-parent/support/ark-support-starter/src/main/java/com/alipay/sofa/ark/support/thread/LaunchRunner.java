@@ -46,6 +46,8 @@ public class LaunchRunner implements Runnable {
     @Override
     public void run() {
         Thread thread = Thread.currentThread();
+        System.out.println(" hdl custom  LaunchRunner ArkConfigs  " + "logging.path = "
+                           + System.getProperty("logging.path"));
         ClassLoader classLoader = thread.getContextClassLoader();
         try {
             Class<?> startClass = classLoader.loadClass(this.startClassName);
@@ -58,6 +60,9 @@ public class LaunchRunner implements Runnable {
             if (!entryMethod.isAccessible()) {
                 entryMethod.setAccessible(true);
             }
+            System.out.println(" hdl custom  LaunchRunner ArkConfigs  " + "logging.path = "
+                               + System.getProperty("logging.path"));
+
             entryMethod.invoke(null, new Object[] { this.args });
         } catch (NoSuchMethodException ex) {
 
